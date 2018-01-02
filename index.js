@@ -35,6 +35,7 @@ exports.handler = (event, context, callback) => {
       extractFromS3(email_message_id)
         .then((mail) => {
           console.log('CHECKING -----')
+          console.log(mail.from.value[0].address)
           htmlEmailBody = mail.html
           sender_actual_email = mail.from.value[0].address
           subject = mail.subject ? mail.subject : ''
@@ -44,8 +45,7 @@ exports.handler = (event, context, callback) => {
           attachments = mail.attachments ? mail.attachments : []
           plainHtmlEmailBody = mail.textAsHtml
 
-          const receiverAliasEmail = mail.to.value.filter((v) => v.address.indexOf('@renthero.cc') > -1)[0].address
-          const receiver_alias_email = receiverAliasEmail.split('@')[0]
+          const receiver_alias_email = mail.to.value.filter((v) => v.address.indexOf('@renthero.cc') > -1)[0].address
 
           // 3. Using the proxy id (RelationshipID), we hit a backend route (SMS_Communications_Microservice) to query Postgres to get the tenant_email and landlord_email
           return getRelationshipFromId(receiver_alias_email, sender_actual_email)
@@ -145,6 +145,10 @@ const determineToAddress = ({ tenant_email, landlord_email }, sender_actual_emai
   } else if (landlord_email === sender_actual_email) {
     return tenant_email
   } else {
+    console.log('========= determineToAddress EDGE CASE ============')
+    console.log(tenant_email)
+    console.log(landlord_email)
+    console.log(sender_actual_email)
     // case where a different email tries to contact this recipient
     return 'support@rentburrow.com'
   }
