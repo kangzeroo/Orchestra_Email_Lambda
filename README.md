@@ -16,7 +16,7 @@ Body: 'Hello is this place still available?' <br/>
 
 And the lambda converts and sends this email out to the landlord, who receives it looking like this: <br/><br/>
 
------ INCOMING EMAIL ----- <br/>
+----- OUTGOING CONVERTED EMAIL ----- <br/>
 To: rent@kw4rent.com <br/>
 From: johnsmith-43A8GD@renthero.cc <br/>
 Body: 'Hello is this place still available?' <br/>
@@ -30,9 +30,10 @@ Every email that gets forwarded by the lambda function is also saved to S3 and l
 1. Receive incoming email from SES and grabs the messageId assigned by SES
 2. Using the messageId, we grab the saved email from S3 (previously saved as part of the AWS SES Ruleset for our email domain)
 3. Parse the saved email from MIME into a readable JS format
-4. Using the real FROM address and the alias TO address of the original email, we grab the alias FROM address for the new forwarded email
+4. Using the real FROM address and the alias TO address of the original email, we grab the alias FROM address for the new forwarded email (hits a backend microservice)
 5. Send out the forwarded email that now appears to come from the alias FORM address (xxxx@renthero.cc)
-6. Logs the communication to DynamoDB
+6. Logs the communication to DynamoDB (hits a backend microservice)
 
 ### Limitations
 - Currently this lambda function cannot forward attachments in emails. To do so, we must switch from ses.sendEmail() to ses.sendRawEmail()
+- If the backend microservice IP address changes, we must manually change it in this lambda function and redeploy
