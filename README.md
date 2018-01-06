@@ -37,3 +37,6 @@ Every email that gets forwarded by the lambda function is also saved to S3 and l
 ### Limitations
 - Currently this lambda function cannot forward attachments in emails. To do so, we must switch from ses.sendEmail() to ses.sendRawEmail()
 - If the backend microservice IP address changes, we must manually change it in this lambda function and redeploy
+
+## How to Deploy
+- Go to AWS 

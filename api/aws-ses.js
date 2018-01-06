@@ -7,7 +7,7 @@ const ses = new AWS_SES({
 
 // CURRENTLY UNABLE TO FOWARD EMAIL ATTACHMENTS
 exports.generateForwardedEmail = function(
-  { toEmailAddresses, ccEmailAddresses, bccEmailAddresses, proxyEmailAddress },
+  { toEmailAddresses, ccEmailAddresses, bccEmailAddresses, proxyFromEmailAddress },
   { subject, attachments },
   htmlEmailBody
 ){
@@ -15,17 +15,17 @@ exports.generateForwardedEmail = function(
     toEmailAddresses = ['personA@email.com', 'personB@email.com']
     ccEmailAddresses = ['personA@email.com', 'personB@email.com']
     bccEmailAddresses = ['personA@email.com', 'personB@email.com']
-    proxyEmailAddress = 'relationshipID@renthero.cc',
+    proxyFromEmailAddress = 'relationshipID@renthero.cc',
     subject = 'RentHero Inquiry'
     htmlEmailBody = <div>This is the email body</div>
   */
 
 	const p = new Promise((res, rej) => {
-		if (!toEmailAddresses || toEmailAddresses.length === 0 || !proxyEmailAddress || !htmlEmailBody) {
+		if (!toEmailAddresses || toEmailAddresses.length === 0 || !proxyFromEmailAddress || !htmlEmailBody) {
 			rej('Missing to email, proxy email or message')
 		} else {
 			const params = createParams(
-        { toEmailAddresses, ccEmailAddresses, bccEmailAddresses, proxyEmailAddress },
+        { toEmailAddresses, ccEmailAddresses, bccEmailAddresses, proxyFromEmailAddress },
         { subject, attachments },
         htmlEmailBody
       )
@@ -34,10 +34,11 @@ exports.generateForwardedEmail = function(
 				// console.log(AWS.config.credentials)
 				ses.sendEmail(params, function(err, data) {
 				  if (err) {
-              console.log('=========== generateForwardedEmail ===========')
+            console.log('=========== generateForwardedEmail ===========')
 				  	 console.log(err); // an error occurred
 				  	 rej(err)
 				  } else {
+            console.log('=========== generateForwardedEmail ===========')
 				  	console.log(data);           // successful response
   					res({
               message: 'Success! Email sent',
@@ -53,7 +54,7 @@ exports.generateForwardedEmail = function(
 
 // setup for AWS SES config
 function createParams(
-  { toEmailAddresses, ccEmailAddresses, bccEmailAddresses, proxyEmailAddress },
+  { toEmailAddresses, ccEmailAddresses, bccEmailAddresses, proxyFromEmailAddress },
   { subject, attachments },
   htmlEmailBody
 ){
@@ -75,12 +76,12 @@ function createParams(
 	      Charset: 'UTF-8'
 	    }
 	  },
-	  Source: proxyEmailAddress, /* required */
+	  Source: proxyFromEmailAddress, /* required */
 	  // ConfigurationSetName: 'STRING_VALUE',
 	  ReplyToAddresses: [
-	      proxyEmailAddress
+	      proxyFromEmailAddress
 	  ],
-	  ReturnPath: proxyEmailAddress,
+	  ReturnPath: proxyFromEmailAddress,
 	  // ReturnPathArn: 'STRING_VALUE',
 	  // SourceArn: 'STRING_VALUE',
 	}

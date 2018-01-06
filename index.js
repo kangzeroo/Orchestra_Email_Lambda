@@ -51,6 +51,7 @@ exports.handler = (event, context, callback) => {
           return getRelationshipFromId(receiver_alias_email, sender_actual_email)
         })
         .then((data) => {
+          console.log(data)
           /*
             data = {
               tenant_id,
@@ -83,7 +84,7 @@ exports.handler = (event, context, callback) => {
               receiver_id: receiver_id,
               sender_email: sender_alias_email,
               receiver_email: receiver_actual_email,
-              plainHtmlEmailBody,
+              message: plainHtmlEmailBody,
             })
             callback(null, 'Finished forwarding email')
         })
