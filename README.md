@@ -2,6 +2,9 @@
 This is a lambda function that takes an incoming email from AWS SES and forwards it to the appropriate recipient.<br/>
 First lets look at the email forwarding at a high level context before diving step-by-step on how this lambda function works.<br/>
 
+![arc342-designing-building-an-endtoend-email-solution-using-aws-39-638](https://user-images.githubusercontent.com/22982964/124559019-cf8f2b00-de6d-11eb-8348-1c8f1b4d6c72.jpeg)
+
+
 ## Email Forwarding Overview
 Tenants and Landlords on RentHero all are assigned an alias_email upon registration. It looks like this:<br/>
 - johnsmith@gmail.com --> johnsmith-43A8GD@renthero.cc
